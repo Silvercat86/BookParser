@@ -2,10 +2,21 @@ import requests
 from bs4 import BeautifulSoup
 
 
+def sort_long_text(full_tag):
+    text = full_tag.text
+    list_text = full_tag.text.split(sep=" ")
+    lenght = len(list_text)
+    count = list_text[lenght - 2] + " " + list_text[lenght - 1]
+    index = (text.find(count))
+    name = (text[:index])
+    return count, name
+
+
 class BookParser():
     def __init__(self):
         self.books = []
         self.series = []
+        self.authors = []
 
     def find_links(self, ask):
         request = requests.get(f"https://flibusta.site/booksearch?ask={ask}")
@@ -22,12 +33,7 @@ class BookParser():
 
         match link_type:
             case 'sequence':
-                text = full_tag.text
-                list_text = full_tag.text.split(sep=" ")
-                lenght = len(list_text)
-                count = list_text[lenght - 2] + " " + list_text[lenght - 1]
-                index = (text.find(count))
-                name = (text[:index])
+                count, name = sort_long_text(full_tag)
                 self.series.append(Collection(link, name, count))
 
             case 'b':
@@ -38,12 +44,12 @@ class BookParser():
                 author = text[1]
                 self.books.append(Book(link, name, author))
 
-
             case "a":
                 text = full_tag.text
                 if text == "Авторы":
                     return
-
+                count, name = sort_long_text(full_tag)
+                self.authors.append(Collection(link, name, count))
 
             case _:
                 pass
@@ -63,9 +69,6 @@ class Collection:
         self.count = count
 
 
-
 myParser = BookParser()
 
 myParser.find_links("Джоан Роулинг")
-
-
