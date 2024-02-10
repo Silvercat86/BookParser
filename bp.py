@@ -61,7 +61,3 @@ class Element:
         self.extra = extra
 
 
-myParser = BookParser()
-myParser.parse_site(1984)
-
-

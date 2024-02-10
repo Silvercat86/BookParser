@@ -1,4 +1,4 @@
-import bp
+from bp import BookParser
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -13,7 +13,6 @@ Builder.load_string("""
     FloatLayout:
         MDTextField:
             font_size : "25dp"
-            icon_left: "language-python"
             pos_hint : {"center_x":0.5,"center_y" : 0.75}
             size_hint : (0.8,0.1)
 
@@ -23,6 +22,7 @@ Builder.load_string("""
             size_hint : (0.6,0.01)
             on_press: 
                 root.manager.current = 'search'
+                
 
 <SearchScreen>:
 
@@ -32,26 +32,26 @@ Builder.load_string("""
         ScrollView:
             MDList:
                 id : cool
-<BookScreen>:
-    
-
 """)
 
 
 class StartScreen(Screen):
-    def search(self,obj):
-        bp.find_all_links()
+    def search(self, obj):
+        myParser.parse_site("Огурец")
+
 
 
 class SearchScreen(Screen):
     def on_enter(self):
         self.ids.cool.clear_widgets()
+        print(self.manager.current)
         for i in range(1, 21):
-            item = OneLineListItem(text="List " + str(i),on_press = self.change_screen)
+            item = OneLineListItem(text="List " + str(i), on_press=self.change_screen)
             self.ids.cool.add_widget(item)
-            print(self.manager.current)
-    def change_screen(self,obj):
+
+    def change_screen(self, obj):
         self.manager.current = "menu"
+        print(self.manager.current)
 
 
 class DemoApp(MDApp):
@@ -64,8 +64,7 @@ class DemoApp(MDApp):
         return sm
 
 
-
-
+myParser = BookParser()
 
 if __name__ == '__main__':
     DemoApp().run()
