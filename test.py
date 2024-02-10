@@ -34,6 +34,7 @@ class BookParser():
         match link_type:
             case 'sequence':
                 count, name = sort_long_text(full_tag)
+                print(name,count)
                 self.series.append(Collection(link, name, count))
 
             case 'b':
@@ -49,6 +50,8 @@ class BookParser():
                 if text == "Авторы":
                     return
                 count, name = sort_long_text(full_tag)
+                print(name,count)
+
                 self.authors.append(Collection(link, name, count))
 
             case _:
@@ -71,4 +74,4 @@ class Collection:
 
 myParser = BookParser()
 
-myParser.find_links("Джоан Роулинг")
+
