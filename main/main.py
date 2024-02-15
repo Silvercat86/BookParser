@@ -1,4 +1,4 @@
-from bp import BookParser
+from main.bp import BookParser
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -10,18 +10,26 @@ Window.size = (380, 780)
 
 Builder.load_string("""
 <StartScreen>:
-    FloatLayout:
-        MDTextField:
-            font_size : "25dp"
-            pos_hint : {"center_x":0.5,"center_y" : 0.75}
-            size_hint : (0.8,0.1)
+    BoxLayout:
+        orientation : "vertical"
+        MDTopAppBar:
+            title: "Demo Application"
+            elevation : 0
+        FloatLayout:
+            MDTextField:
+                font_size : "28dp"
+                pos_hint : {"center_x":0.5,"center_y" : 0.7}
+                size_hint : (0.8,0.11)
+                id : textField
 
-        MDRectangleFlatButton:
-            text : "Search"
-            pos_hint : {"center_x":0.5,"center_y" : 0.68}
-            size_hint : (0.6,0.01)
-            on_press: 
-                root.manager.current = 'search'
+            MDRectangleFlatButton:
+                text : "Search"
+                font_size : "20dp"
+                pos_hint : {"center_x":0.5,"center_y" : 0.6}
+                size_hint : (0.6,0.08)
+                on_press: 
+                    root.search()
+        
                 
 
 <SearchScreen>:
@@ -31,13 +39,13 @@ Builder.load_string("""
         pos_hint : {"center_x":0.5,"center_y" : 0.5}
         ScrollView:
             MDList:
-                id : cool
+                id : myList
 """)
 
 
 class StartScreen(Screen):
-    def search(self, obj):
-        myParser.parse_site("Огурец")
+    def search(self):
+        print(self.ids.textField.text)
 
 
 
