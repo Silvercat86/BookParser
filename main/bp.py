@@ -19,6 +19,7 @@ class BookParser:
         self.authors = []
 
     def parse_site(self, ask):
+        self.clear_data()
         request = requests.get(f"https://flibusta.site/booksearch?ask={ask}")
         soup = BeautifulSoup(request.text, "html.parser")
 
@@ -53,11 +54,14 @@ class BookParser:
             case _:
                 pass
 
+    def clear_data(self):
+        self.books = []
+        self.series = []
+        self.authors = []
+
 
 class Element:
     def __init__(self, link, name, extra):
         self.link = link
         self.name = name
         self.extra = extra
-
-

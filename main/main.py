@@ -1,4 +1,4 @@
-from main.bp import BookParser
+from bp import BookParser
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -30,9 +30,32 @@ Builder.load_string("""
                 on_press: 
                     root.search()
         
-                
-
 <SearchScreen>:
+    FloatLayout:
+        MDRectangleFlatButton:
+            font_size: "32"
+            halign : "left"
+            pos_hint : {"center_x":0.5,"center_y" : 0.7}
+            size_hint : (0.9,0.1)
+            text : "Книги : 0"
+            id :  booksBtn
+        MDRectangleFlatButton:
+            font_size: "32"
+            halign : "left"
+            pos_hint : {"center_x":0.5,"center_y" : 0.59}
+            size_hint : (0.9,0.1)
+            text : "Серии : 0"
+            id :  seriesBtn
+        MDRectangleFlatButton:
+            font_size: "32"
+            halign : "left"
+            pos_hint : {"center_x":0.5,"center_y" : 0.48}
+            size_hint : (0.9,0.1)
+            text : "Авторы : 0"
+            id :  authorsBtn
+            
+
+<BookScreen>:
 
     BoxLayout:
         size_hint : (0.9,0.4)
@@ -45,17 +68,25 @@ Builder.load_string("""
 
 class StartScreen(Screen):
     def search(self):
-        print(self.ids.textField.text)
+        self.manager.current = "search"
 
+        myParser.parse_site(self.ids.textField.text)
 
 
 class SearchScreen(Screen):
+    def on_enter(self):
+        self.ids.booksBtn.text = f"Книги : {len(myParser.books)}"
+        self.ids.seriesBtn.text = f"Серии : {len(myParser.series)}"
+        self.ids.authorsBtn.text = f"Авторы : {len(myParser.authors)}"
+
+
+class BookScreen(Screen):
     def on_enter(self):
         self.ids.cool.clear_widgets()
         print(self.manager.current)
         for i in range(1, 21):
             item = OneLineListItem(text="List " + str(i), on_press=self.change_screen)
-            self.ids.cool.add_widget(item)
+            self.ids.myList.add_widget(item)
 
     def change_screen(self, obj):
         self.manager.current = "menu"
@@ -66,6 +97,7 @@ class DemoApp(MDApp):
 
     def build(self):
         sm = ScreenManager()
+
         sm.add_widget(StartScreen(name='menu'))
         sm.add_widget(SearchScreen(name='search'))
 
